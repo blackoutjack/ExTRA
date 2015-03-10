@@ -1,0 +1,55 @@
+Extraction Tool for Resource Analysis (ExTRA)
+Author: Rich Joiner
+Email: joiner@cs.wisc.edu
+Organization: University of Wisconsin-Madison Computer Sciences
+
+The purpose of this project is to download resources (scripts, images,
+stylesheets, etc.) from remote webpages so that these artifacts can
+be analyzed individually, reincorporated, and run locally.
+
+The unpack.py script takes as input a URL that points to an HTML page,
+and collects resources that would be loaded by that page at runtime.
+Inline (and remote) scripts are separated into individual files, and
+all resources are collected in a directory tree. Analysis and rewriting
+can be done on these local resources. The repack.py script can then be
+used to reincorporate inline resources into the HTML to produce a
+(usually) functional page.
+
+You may ask how this is an improvement over a browser's "save page
+as..." feature. Several benefits come to mind.
+
+* ExTRA does not require you to navigate a browser to the page you want
+  to analyze. This may be important if you suspect that the page is
+  malicious or contaminated by malicious resources.
+* ExTRA attempts to maintain the (relative) directory structure of the
+  resources as hosted on the original server. (Browsers tend to dump all
+  linked-to resources in a single subdirectory.) At times, JavaScript
+  logic expects files to be found at particular relative paths (for
+  example, when using RequireJS). Therefore, the relative structure
+  helps maintain the original semantics and better recreates the
+  original artifact.
+* ExTRA downloads resources that are incorporated via absolute URLS,
+  including links to 3rd-party sites. Whereas browsers tend to let
+  absolute URLs remain as hot links to within the downloaded HTML,
+  ExTRA attempts to collect all resources onto the local file system.
+
+Web pages extracted by ExTRA are not guaranteed to function exactly as
+they would on the original site. (This is impossible in general; for
+example, JavaScript may incorporate different logic based on the current
+domain name.) ExTRA may also fail to download files that are loaded
+dynamically through JavaScript or other means. However, we have found
+that it works well in practice.
+
+The ExTRA tool is written in Python (with support for Python version 2
+and 3). It was developed and tested on Ubuntu 12.04 (and higher), but it
+should run on most platforms.
+
+Extraction of resources linked to within CSS files requires Python 3 and
+the cssutils package. On Ubuntu, it can be installed with the following
+command (perhaps with sudoudo apt-get install python3-cssutils.
+
+apt-get install python3-cssutils
+
+Thank for your interest. Feel free to make suggestions for improving
+ExTRA.
+
