@@ -134,10 +134,6 @@ def main():
   if len(args) != 2:
     parser.error("Invalid number of arguments")
 
-  #global cfg
-  #cfg = imp.load_source("cfg", args[0])
-  #assert os.path.isdir(cfg.SOURCEDIR), "Source path %s doesn't exist." % cfg.SOURCEDIR
-
   htmlfile = os.path.abspath(args[0])
   if not os.path.isfile(htmlfile):
     fatal("HTMLFILE argument is not a file")

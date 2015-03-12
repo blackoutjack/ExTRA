@@ -21,7 +21,7 @@ if MAJOR == 3:
   import urllib.parse as urlparse
   import urllib.request as urlrequest
   import urllib.error as urlerror
-  import http.cookiejar
+  import http.cookiejar as cookiejar
   import cssutils
   CSS_SUPPORT = True
 else:
@@ -64,10 +64,6 @@ from util import symlink
 
 if not CSS_SUPPORT:
   warn("CSS analysis is not supported on Python 2")
-
-#JSUNPACKPKG = os.path.join(JAMPKG, 'util', 'jsunpack')
-#sys.path.append(JSUNPACKPKG)
-#import swf
 
 JS_CONTENT_TYPES = [
   'text/javascript',
@@ -1418,10 +1414,10 @@ def normalizeText(s, removenl=False, quote=False):
 
 def main():
   DEFAULT_TIMEOUT = 10
-  parser = OptionParser(usage="%prog URL|HTML")
+  parser = OptionParser(usage="%prog URL|FILE.html")
   parser.add_option('-v', '--verbose', action='store_true', default=False, dest='verbose', help='verbose output')
   parser.add_option('--vv', action='store_true', default=False, dest='veryverbose', help='very verbose output')
-  parser.add_option('-s', '--saveall', action='store_true', default=False, dest='saveall', help='save all downloadeded files')
+  parser.add_option('-s', '--saveall', action='store_true', default=False, dest='saveall', help='save all downloaded files')
   parser.add_option('-f', '--overwrite', action='store_true', default=False, dest='overwrite', help='overwrite files if output directory already exists')
   parser.add_option('-a', '--app', action='store', default=None, dest='app', help='application name')
   parser.add_option('-o', '--outdir', action='store', default=None, dest='outdir', help='output directory')
@@ -1431,10 +1427,6 @@ def main():
 
   if len(args) != 1:
     parser.error("Invalid number of arguments")
-
-  #global cfg
-  #cfg = imp.load_source("cfg", args[0])
-  #assert os.path.isdir(cfg.SOURCEDIR), "Source path %s doesn't exist." % cfg.SOURCEDIR
 
   infile = args[0]
 

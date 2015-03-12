@@ -1,0 +1,28 @@
+
+
+Usage: unpack.py URL|FILE.html
+Options:
+  -h, --help            show this help message and exit
+  -v, --verbose         verbose output
+  --vv                  very verbose output
+  -s, --saveall         save all downloaded files
+  -f, --overwrite       overwrite files if output directory already exists
+  -a APP, --app=APP     application name
+  -o OUTDIR, --outdir=OUTDIR
+                        output directory
+  -t TIMEOUT, --timeout=TIMEOUT
+                        timeout (in seconds) for HTTP requests
+
+
+Usage: repack.py HTMLFILE JSLIST
+Options:
+  -h, --help            show this help message and exit
+  -v, --verbose         verbose output
+  --vv                  very verbose output
+  -o OUTFILE, --outfile=OUTFILE
+                        output file
+  -d JSDIR, --jsdir=JSDIR
+                        script directory
+  -f, --force           overwrite output file
+  -p POLICY, --policy=POLICY
+                        include policy file (and libTx.js)
