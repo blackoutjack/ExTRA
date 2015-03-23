@@ -98,18 +98,22 @@ def get_output_dir(top, base):
 def fatal(txt, code=1):
   sys.stderr.write("FATAL: %s\n" % txt)
   sys.exit(code)
+# /fatal
 
 def err(txt):
   sys.stderr.write("ERROR: %s\n" % txt)
   sys.stderr.flush()
+# /err
 
 def out(txt):
   sys.stderr.write("INFO: %s\n" % txt)
   sys.stderr.flush()
+# /out
 
 def warn(txt):
   sys.stderr.write("WARNING: %s\n" % txt)
   sys.stderr.flush()
+# /warn
 
 def get_lines(filename, comment=None):
   fl = open(filename, 'r')
@@ -120,6 +124,7 @@ def get_lines(filename, comment=None):
       continue
     ret.append(line)
   return ret
+# /get_lines
 
 def get_file_info(filepath):
   return {
@@ -158,6 +163,7 @@ def get_base(filepath):
   fileparts = filename.split('.', 1)
   base = fileparts[0]
   return base
+# /get_base
 
 def symlink(srcpath, linkdir, linkname=None, relative=False): 
   srcdir, srcname = os.path.split(srcpath)
