@@ -30,7 +30,7 @@ as..." feature. Several benefits come to mind.
   original artifact.
 * ExTRA downloads resources that are incorporated via absolute URLS,
   including links to 3rd-party sites. Whereas browsers tend to let
-  absolute URLs remain as hot links to within the downloaded HTML,
+  absolute URLs remain as hot links within the downloaded HTML,
   ExTRA attempts to collect all resources onto the local file system.
 
 Web pages extracted by ExTRA are not guaranteed to function exactly as
@@ -46,7 +46,7 @@ should run on most platforms.
 
 Extraction of resources linked to within CSS files requires Python 3 and
 the cssutils package. On Ubuntu, it can be installed with the following
-command (perhaps with sudoudo apt-get install python3-cssutils.
+command (perhaps with sudo).
 
 apt-get install python3-cssutils
 
