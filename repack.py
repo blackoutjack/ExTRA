@@ -8,13 +8,6 @@
 import sys
 MAJOR = sys.version_info[0]
 
-try:
-  import bs4
-except ImportError as e:
-  if MAJOR == 3: aptget = "apt-get install python3-bs4"
-  else: aptget = "apt-get install python-bs4"
-  fatal("Unable to import BeautifulSoup 4: %s.\nFor Ubuntu, use ``%s''" % (str(e), aptget))
-
 import os
 import re
 import shutil
@@ -28,6 +21,13 @@ from util import err
 from util import warn
 from util import out
 from util import symlink
+
+try:
+  import bs4
+except ImportError as e:
+  if MAJOR == 3: aptget = "apt-get install python3-bs4"
+  else: aptget = "apt-get install python-bs4"
+  fatal("Unable to import BeautifulSoup 4: %s.\nFor Ubuntu, use ``%s''" % (str(e), aptget))
 
 # Reinsert scripts into the stripped HTML file.
 def repack(htmlfile, jslist, jsdir=None, policy=None):
@@ -107,13 +107,13 @@ def repack(htmlfile, jslist, jsdir=None, policy=None):
     head.insert(0, policytag)
 
     # Create a symbolic link and insert the JAMScript library tag.
-    libpath = JAMSCRIPT_LIB
-    libdir, libname = os.path.split(libpath)
+    #libpath = JAMSCRIPT_LIB
+    #libdir, libname = os.path.split(libpath)
     # Link the library in the same directory as the policy.
-    linkdir = jsdir
-    linkpath = symlink(libpath, linkdir)
-    libtag = soup.new_tag("script", src=libname)
-    head.insert(1, libtag)
+    #linkdir = jsdir
+    #linkpath = symlink(libpath, linkdir)
+    #libtag = soup.new_tag("script", src=libname)
+    #head.insert(1, libtag)
 
   return soup.prettify()
 # /repack

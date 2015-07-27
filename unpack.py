@@ -32,13 +32,6 @@ else:
   import cookielib as cookiejar
   CSS_SUPPORT = False
 
-try:
-  import bs4
-except ImportError as e:
-  if MAJOR == 3: aptget = "apt-get install python3-bs4"
-  else: aptget = "apt-get install python-bs4"
-  fatal("Unable to import BeautifulSoup 4: %s.\nFor Ubuntu, use ``%s''" % (str(e), aptget))
-
 import os
 import re
 import shutil
@@ -60,6 +53,13 @@ from util import err
 from util import warn
 from util import out
 from util import symlink
+
+try:
+  import bs4
+except ImportError as e:
+  if MAJOR == 3: aptget = "apt-get install python3-bs4"
+  else: aptget = "apt-get install python-bs4"
+  fatal("Unable to import BeautifulSoup 4: %s.\nFor Ubuntu, use ``%s''" % (str(e), aptget))
 
 
 if not CSS_SUPPORT:
