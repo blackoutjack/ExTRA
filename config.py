@@ -10,16 +10,15 @@ import tempfile
 # that can be imported into other Python scripts.
 #
 
-JAMPKG = os.getenv('JAMPKG', '.')
-JAMSCRIPT_DIR = os.path.join(JAMPKG, 'jamscript')
-TESTS_DIR = os.path.join(JAMPKG, 'tests')
+#JAMPKG = os.getenv('JAMPKG', '.')
+#JAMSCRIPT_DIR = os.path.join(JAMPKG, 'jamscript')
+#TESTS_DIR = os.path.join(JAMPKG, 'tests')
 
-OUTDIR = os.path.join(JAMPKG,'output')
-UTILDIR = os.path.join(JAMPKG, 'util')
-UNPACKDIR = os.path.join(JAMPKG, 'unpacked')
-ExTRADIR = os.path.join(UTILDIR, 'ExTRA')
-UNPACK_SCRIPT = os.path.join(ExTRADIR, 'unpack.py')
-REPACK_SCRIPT = os.path.join(ExTRADIR, 'repack.py')
+#UTILDIR = os.path.join(JAMPKG, 'util')
+UNPACKDIR = os.getenv('UNPACKDIR', 'unpacked')
+#ExTRADIR = os.path.join(UTILDIR, 'ExTRA')
+#UNPACK_SCRIPT = os.path.join(ExTRADIR, 'unpack.py')
+#REPACK_SCRIPT = os.path.join(ExTRADIR, 'repack.py')
 
 #JSLIBDIR = os.path.join(JAMSCRIPT_DIR, 'txjs')
 #JAMSCRIPT_LIB = os.path.join(JSLIBDIR, 'libTx.js')
