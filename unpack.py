@@ -16,22 +16,6 @@
 #
 
 import sys
-MAJOR = sys.version_info[0]
-if MAJOR == 3:
-  import urllib.parse as urlparse
-  import urllib.request as urlrequest
-  import urllib.error as urlerror
-  import http.cookiejar as cookiejar
-  import cssutils
-  CSS_SUPPORT = True
-else:
-  import urlparse
-  # This module was split across two in Python 3.
-  import urllib2 as urlrequest
-  import urllib2 as urlerror
-  import cookielib as cookiejar
-  CSS_SUPPORT = False
-
 import os
 import re
 import shutil
@@ -54,6 +38,27 @@ from util import warn
 from util import out
 from util import symlink
 
+MAJOR = sys.version_info[0]
+if MAJOR == 3:
+  import urllib.parse as urlparse
+  import urllib.request as urlrequest
+  import urllib.error as urlerror
+  import http.cookiejar as cookiejar
+  try:
+    import cssutils
+    CSS_SUPPORT = True
+  except ImportError as e:
+    CSS_SUPPORT = False
+    warn("CSS analysis is disabled: %s" % str(e))
+else:
+  import urlparse
+  # This module was split across two in Python 3.
+  import urllib2 as urlrequest
+  import urllib2 as urlerror
+  import cookielib as cookiejar
+  CSS_SUPPORT = False
+  warn("CSS analysis is not supported on Python 2")
+
 try:
   import bs4
 except ImportError as e:
@@ -61,9 +66,7 @@ except ImportError as e:
   else: aptget = "apt-get install python-bs4"
   fatal("Unable to import BeautifulSoup 4: %s.\nFor Ubuntu, use ``%s''" % (str(e), aptget))
 
-
-if not CSS_SUPPORT:
-  warn("CSS analysis is not supported on Python 2")
+MAX_FILENAME_LENGTH = 143
 
 JS_CONTENT_TYPES = [
   'text/javascript',
@@ -292,6 +295,8 @@ class Resource:
   # /setContentType
 
   def getData(self):
+    if self.encoding is not None:
+      return self.data.decode(self.encoding, errors='replace')
     return self.data
   # /getData
 
@@ -353,12 +358,26 @@ class Resource:
       if relpath.startswith('/'):
         relpath = relpath[1:]
 
+      # Reduce long filenames.
+      basename = os.path.basename(relpath)
+      if len(basename) > MAX_FILENAME_LENGTH:
+        ext = getExtension(self.url, self.contenttype)
+        if basename.endswith('.' + ext):
+          # Preserve the extension.
+          extlen = len(ext) + 1
+          basename = basename[:-extlen]
+          baselen = MAX_FILENAME_LENGTH - extlen
+          basename = basename[:baselen] + '.' + ext;
+        else:
+          basename = basename[:MAX_FILENAME_LENGTH]
+        relpath = os.path.join(os.path.split(relpath)[0], basename)
+
       # Separate certain types of resources for organizational purposes.
       stordir = self.getStoragePrefix() 
       if stordir is not None:
         relpath = os.path.join(stordir, relpath)
 
-    if relpath.endswith('/'):
+    if relpath.endswith(os.sep):
       relpath += self.getFileName()
     if relpath == '':
       relpath = self.getFileName()
@@ -379,7 +398,13 @@ class Resource:
       if ext is None:
         ext = getExtension(self.url, self.contenttype)
 
-      if not self.filename.endswith('.' + ext):
+      baselen = MAX_FILENAME_LENGTH - len(ext) - 1
+      if self.filename.endswith('.' + ext):
+        if len(self.filename) > MAX_FILENAME_LENGTH:
+          self.filename = self.filename[:baselen] + '.' + ext;
+      else:
+        if len(self.filename) > baselen:
+          self.filename = self.filename[:baselen]
         self.filename += '.' + ext
     return self.filename
   # /getFileName
@@ -755,7 +780,7 @@ class HTMLParser():
 
     href = attrs['href'].strip()
     if href.startswith('javascript:'):
-      text = href[11:]
+      text = href[11:].decode(self.encoding, errors='replace')
       ctype = 'text/javascript'
       restype = 'script.href'
       resource = self.loadInlineResource(restype, elt, ctype, text) 
@@ -1098,9 +1123,9 @@ class HTMLParser():
     if isinstance(elt, bs4.Comment):
       contents += '<!--' + str(elt) + '-->\n'
     elif isinstance(elt, bs4.NavigableString):
-      contents += str(elt)
+      contents += unicode(elt)
     else:
-      contents += elt.prettify().strip()
+      contents += elt.prettify().decode(self.encoding, errors='replace').strip()
     return contents
   # /getElementContents
 
@@ -1177,7 +1202,7 @@ class Unpacker():
     encoding = resource.getEncoding()
     data = resource.getData()
     if data is not None:
-      text = data.decode(encoding, errors='replace')
+      text = data
 
       hparser = HTMLParser(self.url, encoding, self.app)
       hparser.extractResources(text)
